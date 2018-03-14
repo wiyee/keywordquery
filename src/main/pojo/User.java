@@ -18,6 +18,9 @@ public class User {
     private String activeCity;
     private String activeState;
 
+    public User() {
+    }
+
     public String getId() {
         return id;
     }

@@ -13,7 +13,7 @@ import java.util.*;
  * Created by wiyee on 2018/3/9.
  * 将兴趣点拆分 保留三个城市及其附近的poi信息
  */
-public class test {
+public class SplitPOIData {
     public static void main(String[] args) {
         Map<POI,Integer> poiMapNV = new LinkedHashMap<POI, Integer>();
         Map<POI,Integer> poiMapON = new LinkedHashMap<POI, Integer>();

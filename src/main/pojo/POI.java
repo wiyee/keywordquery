@@ -18,6 +18,9 @@ public class POI {
     private int reviewCount;
     private int isOpen;
 
+    public POI() {
+    }
+
     public POI(String id, String name, String neighborhood, String address, String city, String state, String postalCode, Double lat, Double lon, Double stars, int reviewCount, int isOpen) {
         this.id = id;
         this.name = name;
@@ -31,6 +34,24 @@ public class POI {
         this.stars = stars;
         this.reviewCount = reviewCount;
         this.isOpen = isOpen;
+    }
+
+    @Override
+    public String toString() {
+        return "POI{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", neighborhood='" + neighborhood + '\'' +
+                ", address='" + address + '\'' +
+                ", city='" + city + '\'' +
+                ", state='" + state + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                ", lat=" + lat +
+                ", lon=" + lon +
+                ", stars=" + stars +
+                ", reviewCount=" + reviewCount +
+                ", isOpen=" + isOpen +
+                '}';
     }
 
     public String getId() {
