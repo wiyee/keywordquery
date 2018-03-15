@@ -15,10 +15,20 @@ public class User {
     private int funny;
     private int cool;
     private int fans;
-    private String activeCity;
-    private String activeState;
 
     public User() {
+    }
+
+    public User(String id, String name, int review_count, Date yelp_since, double average_stars, int useful, int funny, int cool, int fans) {
+        this.id = id;
+        this.name = name;
+        this.review_count = review_count;
+        this.yelp_since = yelp_since;
+        this.average_stars = average_stars;
+        this.useful = useful;
+        this.funny = funny;
+        this.cool = cool;
+        this.fans = fans;
     }
 
     public String getId() {
@@ -93,19 +103,4 @@ public class User {
         this.fans = fans;
     }
 
-    public String getActiveCity() {
-        return activeCity;
-    }
-
-    public void setActiveCity(String activeCity) {
-        this.activeCity = activeCity;
-    }
-
-    public String getActiveState() {
-        return activeState;
-    }
-
-    public void setActiveState(String activeState) {
-        this.activeState = activeState;
-    }
 }
