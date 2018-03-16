@@ -2,7 +2,6 @@ package main.clean;
 
 import main.jdbc.JDBC;
 import main.jdbc.OJDBC;
-import main.pojo.POI;
 import main.pojo.User;
 import main.tools.StaticMethod;
 import main.tools.StaticValue;
@@ -14,6 +13,7 @@ import java.util.*;
 
 /**
  * Created by wiyee on 2018/3/14.
+ *
  */
 public class GetUserCity {
     /*

@@ -7,14 +7,45 @@ import java.util.Date;
  */
 public class Review {
     private String reviewId;
-    private String businessId;
-    private String userId;
     private double stars;
     private Date date;
     private String text;
     private int useful;
     private int funny;
     private int cool;
+    private String businessId;
+    private String userId;
+
+
+    public Review() {
+    }
+
+    public Review(String reviewId, double stars, Date date, String text, int useful, int funny, int cool, String businessId, String userId) {
+        this.reviewId = reviewId;
+        this.stars = stars;
+        this.date = date;
+        this.text = text;
+        this.useful = useful;
+        this.funny = funny;
+        this.cool = cool;
+        this.businessId = businessId;
+        this.userId = userId;
+    }
+
+    @Override
+    public String toString() {
+        return "Review{" +
+                "reviewId='" + reviewId + '\'' +
+                ", stars=" + stars +
+                ", date=" + date +
+                ", text='" + text + '\'' +
+                ", useful=" + useful +
+                ", funny=" + funny +
+                ", cool=" + cool +
+                ", businessId='" + businessId + '\'' +
+                ", userId='" + userId + '\'' +
+                '}';
+    }
 
     public String getReviewId() {
         return reviewId;

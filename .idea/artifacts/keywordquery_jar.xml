@@ -1,0 +1,15 @@
+<component name="ArtifactManager">
+  <artifact name="keywordquery:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/keywordquery_jar</output-path>
+    <root id="root">
+      <element id="archive" name="keywordquery.jar">
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+        </element>
+        <element id="module-output" name="keywordquery" />
+      </element>
+      <element id="library" level="project" name="Maven: com.oracle:ojdbc6:11.2.0.3" />
+      <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.42" />
+    </root>
+  </artifact>
+</component>
