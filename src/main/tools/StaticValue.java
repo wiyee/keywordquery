@@ -12,7 +12,8 @@ public class StaticValue {
     public static String driver;
     public static String con;
 
-    public static String[] state = new String[]{"AZ","ON","NV"};
+    public static final String[] stateList = new String[]{"AZ","ON","NV"};
+    public static final String STATE = "ON";
 
 	static{
 		String[] strArr=StaticMethod.setDataBase(StaticMethod.DbSystem.MYSQL,ip,dbName);

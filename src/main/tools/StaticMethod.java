@@ -70,4 +70,5 @@ public class StaticMethod {
 		return sb.substring(0, sb.length() - 1) + ")";
 	}
 
+
 }

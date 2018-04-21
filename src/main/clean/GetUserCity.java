@@ -74,7 +74,7 @@ public class GetUserCity {
         }finally {
             jdbc.close();
         }
-        for (String s: StaticValue.state){
+        for (String s: StaticValue.stateList){
             if (stateSet.contains(s)){
                 return true;
             }

@@ -10,6 +10,7 @@ import main.tools.StaticValue;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -66,7 +67,7 @@ public class DataTransfer {
         }finally {
             jdbc.close();
         }
-        for (String s: StaticValue.state){
+        for (String s: StaticValue.stateList){
             if (stateSet.contains(s)){
                 return true;
             }
@@ -77,9 +78,10 @@ public class DataTransfer {
     private void saveReview(List<Review> list ){
         OJDBC ojdbc = new OJDBC();
         PreparedStatement stmt=null;
+        Connection conn= null;
         String insertSql = "insert into \"review\" values" + StaticMethod.nMark(9);
         try{
-            Connection conn=ojdbc.getConnect();
+            conn = ojdbc.getConnect();
             stmt = conn.prepareStatement(insertSql);
             // 方式2：批量提交
             conn.setAutoCommit(false);
@@ -98,6 +100,7 @@ public class DataTransfer {
                 stmt.executeBatch();
             }
             conn.commit();
+
         }catch(Exception e){
             e.printStackTrace();
         }finally{
@@ -108,8 +111,14 @@ public class DataTransfer {
                     e.printStackTrace();
                 }
             }
+            if (conn!=null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
             ojdbc.close();
-
         }
     }
 

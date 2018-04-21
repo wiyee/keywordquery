@@ -4,7 +4,7 @@ import java.util.Date;
 
 /**
  * Created by wiyee on 2018/3/13.
- *
+ * 评价信息
  */
 public class Review {
     private String reviewId;

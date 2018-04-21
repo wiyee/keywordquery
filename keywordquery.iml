@@ -12,5 +12,9 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.42" level="project" />
     <orderEntry type="library" name="Maven: com.oracle:ojdbc6:11.2.0.3" level="project" />
+    <orderEntry type="library" name="Maven: com.github.davidmoten:rtree:0.8-RC10" level="project" />
+    <orderEntry type="library" name="Maven: com.github.davidmoten:guava-mini:0.1" level="project" />
+    <orderEntry type="library" name="Maven: io.reactivex:rxjava:1.1.4" level="project" />
+    <orderEntry type="library" name="Maven: com.github.davidmoten:rxjava-extras:0.7" level="project" />
   </component>
 </module>
