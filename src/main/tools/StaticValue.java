@@ -15,10 +15,14 @@ public class StaticValue {
     public static final String[] stateList = new String[]{"AZ","ON","NV"};
     public static final String STATE = "ON";
 
+//==========================================score paramater=============================================
+	public static double beta = 0.5;
+
+
+
 	static{
 		String[] strArr=StaticMethod.setDataBase(StaticMethod.DbSystem.MYSQL,ip,dbName);
 		driver=strArr[0];
 		con=strArr[1];
 	}
-	
 }

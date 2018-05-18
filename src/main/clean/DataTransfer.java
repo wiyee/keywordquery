@@ -15,6 +15,7 @@ import java.util.*;
 
 /**
  * Created by wiyee on 2018/3/16.
+ * 清洗数据，将mysql的review表的几个state的数据导入到oracle数据库中。
  */
 public class DataTransfer {
     private void getReview(){
