@@ -171,7 +171,7 @@ public class RStarTree {
      * @param map
      */
     private void savePoi2Oracle(Map<String,Integer> map){
-        String sql = "insert into \"mbr_cotain_poi_"+ StaticValue.STATE + "\" values" + StaticMethod.nMark(2);
+        String sql = "insert into \"mbr_contain_poi_"+ StaticValue.STATE + "\" values" + StaticMethod.nMark(2);
         OJDBC ojdbc = new OJDBC();
         PreparedStatement stmt=null;
         Connection conn= null;

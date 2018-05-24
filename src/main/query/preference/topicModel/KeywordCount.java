@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class KeywordCount {
 
-    public static Map<String,Integer> keyMap = new HashMap<String, Integer>(); //保存keyword 和count
+    public static Map<String,Integer> keyMap = new HashMap<String, Integer>(); // 保存keyword 和count
 
     public static void main(String[] args){
         System.out.println("start...");

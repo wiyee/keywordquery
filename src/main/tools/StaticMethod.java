@@ -46,7 +46,9 @@ public class StaticMethod {
 	}
 
 	/**
-	 * map根据value排降序
+	 * map根据value排序(desc)
+	 * @param map
+	 * @return
 	 */
 	public static LinkedHashMap<?,Integer> sortMapByValue(Map<?,Integer> map){
 		List<Entry<?, Integer>> list = new ArrayList<Entry<?, Integer>>(map.entrySet());
@@ -62,6 +64,11 @@ public class StaticMethod {
 		return resultMap;
 	}
 
+	/**
+	 *
+	 * @param n sql语句中待写入数据量（insert into <table> values(...) 省略号中数据条数）
+	 * @return
+	 */
 	public static String nMark(int n) {
 		StringBuffer sb = new StringBuffer("(");
 		for (int i = 0; i < n; i++) {
@@ -70,5 +77,17 @@ public class StaticMethod {
 		return sb.substring(0, sb.length() - 1) + ")";
 	}
 
-
+	/**
+	 * 计算两个日期之间的天数
+	 *
+	 * @param start 开始日期
+	 * @param end   结束日期
+	 * @return 两个日期之间的天数
+	 * @author wiyee
+	 */
+	public static int daysBetween(Date start, Date end) {
+		int difference;
+		difference = (int) ((end.getTime() - start.getTime()) / 86400000);
+		return difference;
+	}
 }

@@ -3,6 +3,7 @@ package main.pojo;
 /**
  * Created by wiyee on 2018/4/23.
  * category
+ * 只在清洗数据时有用到。
  */
 public class Category {
     private int category_id;
