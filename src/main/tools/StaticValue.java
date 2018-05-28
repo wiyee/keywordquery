@@ -5,7 +5,7 @@ import java.util.Date;
 public class StaticValue {
 
 	/**
-	 * 数据库
+	 * mysql 数据库
 	 */
 	public static final String name="root";
 	public static final String pwd="123456";
@@ -13,6 +13,16 @@ public class StaticValue {
     public static final String dbName="yelp_db";
     public static String driver;
     public static String con;
+
+    /**
+     * oracle 数据库
+     */
+    public static final String oracle_name="WYY";
+    public static final String oracle_pwd="wyy";
+    public static final String oracle_ip="10.1.18.155";
+    public static final String oracle_dbName="ORCL";
+    public static String oracle_driver;
+    public static String oracle_con;
 
     public static final String[] stateList = new String[]{"AZ","ON","NV"};
     public static final String STATE = "ON";
@@ -30,8 +40,12 @@ public class StaticValue {
 
 
 	static{
-		String[] strArr=StaticMethod.setDataBase(StaticMethod.DbSystem.MYSQL,ip,dbName);
-		driver=strArr[0];
-		con=strArr[1];
+		String[] mysqlArr=StaticMethod.setDataBase(StaticMethod.DbSystem.MYSQL,ip,dbName);
+		driver=mysqlArr[0];
+		con=mysqlArr[1];
+
+		String[] oracleArr = StaticMethod.setDataBase(StaticMethod.DbSystem.ORACLE,oracle_ip,oracle_dbName);
+		oracle_driver = oracleArr[0];
+		oracle_con = oracleArr[1];
 	}
 }

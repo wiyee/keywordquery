@@ -13,11 +13,10 @@ public class OJDBC {
     private ResultSet rs;
 
     public Connection getConnect() {
-        String driver="oracle.jdbc.driver.OracleDriver";
-        String con="jdbc:oracle:thin:@10.1.18.155:1521:ORCL";
+
         try{
-            Class.forName(driver);
-            Connection connection= DriverManager.getConnection(con, "WYY", "wyy");
+            Class.forName(StaticValue.oracle_driver);
+            Connection connection= DriverManager.getConnection(StaticValue.oracle_con, StaticValue.oracle_name, StaticValue.oracle_pwd);
             return connection;
         } catch(Exception e) {
             e.printStackTrace();

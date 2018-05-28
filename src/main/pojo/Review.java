@@ -21,6 +21,12 @@ public class Review {
     public Review() {
     }
 
+    public Review(double stars, Date date, String businessId) {
+        this.stars = stars;
+        this.date = date;
+        this.businessId = businessId;
+    }
+
     public Review(String reviewId, double stars, Date date, String text, int useful, int funny, int cool, String businessId, String userId) {
         this.reviewId = reviewId;
         this.stars = stars;

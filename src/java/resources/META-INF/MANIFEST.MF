@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Class-Path: rtree-0.8-RC10.jar mysql-connector-java-5.1.42.jar guava-m
+ ini-0.1.jar json-20180130.jar ojdbc6-11.2.0.3.jar rxjava-extras-0.7.j
+ ar rxjava-1.1.4.jar
+Main-Class: main.query.preference.topicModel.UsrInterestModel
+

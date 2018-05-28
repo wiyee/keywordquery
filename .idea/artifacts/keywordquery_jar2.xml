@@ -1,0 +1,20 @@
+<component name="ArtifactManager">
+  <artifact name="keywordquery:jar2">
+    <output-path>$PROJECT_DIR$/out/artifacts/keywordquery_jar2</output-path>
+    <root id="root">
+      <element id="archive" name="keywordquery.jar">
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/src/java/resources/META-INF/MANIFEST.MF" />
+        </element>
+        <element id="module-output" name="keywordquery" />
+      </element>
+      <element id="library" level="project" name="Maven: com.github.davidmoten:rtree:0.8-RC10" />
+      <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.42" />
+      <element id="library" level="project" name="Maven: com.github.davidmoten:guava-mini:0.1" />
+      <element id="library" level="project" name="Maven: org.json:json:20180130" />
+      <element id="library" level="project" name="Maven: com.oracle:ojdbc6:11.2.0.3" />
+      <element id="library" level="project" name="Maven: com.github.davidmoten:rxjava-extras:0.7" />
+      <element id="library" level="project" name="Maven: io.reactivex:rxjava:1.1.4" />
+    </root>
+  </artifact>
+</component>
