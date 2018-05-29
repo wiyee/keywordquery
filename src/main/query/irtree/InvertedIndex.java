@@ -1,5 +1,6 @@
 package main.query.irtree;
 
+import main.jdbc.JDBC;
 import main.jdbc.OJDBC;
 import main.tools.StaticMethod;
 import main.tools.StaticValue;
@@ -48,7 +49,7 @@ public class InvertedIndex {
      */
     private List<Integer> getMbrIdByDepth(int depth){
         List<Integer> reslist = new ArrayList<Integer>();
-        String sql = "SELECT \"id\" FROM \"mbr_" + StaticValue.STATE + " \" WHERE \"depth\" = " + depth;
+        String sql = "SELECT \"id\" FROM \"mbr_" + StaticValue.STATE + "\" WHERE \"depth\" = " + depth;
         OJDBC ojdbc = new OJDBC();
         try {
             ResultSet rs = ojdbc.executeQuery(sql);
@@ -104,10 +105,25 @@ public class InvertedIndex {
             while (rs.next()){
                 String business_id = rs.getString(1);
                 String cate = rs.getString(2);
-
-                String[] splitString = cate.split(",");
-                for (String s: splitString){
-                    String s1 = s.trim();
+                if (cate == null){
+                    continue;
+                }
+                if (cate.contains(",")){
+                    String[] splitString = cate.split(",");
+                    for (String s: splitString){
+                        String s1 = s.trim();
+                        if (invertedMap.containsKey(s1)){
+                            List<String> list = invertedMap.get(s1);
+                            list.add(business_id);
+                            invertedMap.put(s1,list);
+                        }else {
+                            List<String> list = new ArrayList<String>();
+                            list.add(business_id);
+                            invertedMap.put(s1,list);
+                        }
+                    }
+                } else {
+                    String s1 = cate.trim();
                     if (invertedMap.containsKey(s1)){
                         List<String> list = invertedMap.get(s1);
                         list.add(business_id);
@@ -166,9 +182,21 @@ public class InvertedIndex {
      * @return
      */
     private Map<String,List<String>> mergeMap(Map<Integer,String> invMap){
+
         Map<String,List<String>> resInvMap = new HashMap<String, List<String>>();
         for (int id:invMap.keySet()){
             Map<String,List<String>> childNodeInvMap = json2Map(invMap.get(id));
+            for (String s: childNodeInvMap.keySet()){
+                if (resInvMap.containsKey(s)){
+                    List<String> idList = resInvMap.get(s);
+                    idList.add(String.valueOf(id));
+                    resInvMap.put(s,idList);
+                } else {
+                    List<String> idList = new ArrayList<String>();
+                    idList.add(String.valueOf(id));
+                    resInvMap.put(s,idList);
+                }
+            }
         }
         return resInvMap;
     }
@@ -180,11 +208,11 @@ public class InvertedIndex {
      * @return
      */
     private String getInvertedIndexByMbrId(int mbr_id){
-        String sql = "SELECT \"inverted_index_string\" FROM \"inverted_index_" + StaticValue.STATE + "\" WHERE \"id\" = " + mbr_id;
-        OJDBC ojdbc = new OJDBC();
+        String sql = "SELECT inverted_index_string FROM inverted_index_" + StaticValue.STATE + " WHERE id = " + mbr_id;
+        JDBC jdbc = new JDBC();
         String invertedIndexString = null;
         try {
-            ResultSet rs = ojdbc.executeQuery(sql);
+            ResultSet rs = jdbc.executeQuery(sql);
             if (rs.next()){
                 invertedIndexString = rs.getString(1);
             }
@@ -192,7 +220,7 @@ public class InvertedIndex {
         }catch (Exception e){
             e.printStackTrace();
         }finally {
-            ojdbc.close();
+            jdbc.close();
         }
         return invertedIndexString;
     }
@@ -203,11 +231,11 @@ public class InvertedIndex {
      * @param map
      */
     private void saveInvertedIndex2Oracle(int depth, Map<Integer,String> map){
-        String sql = "INSERT INTO \"inverted_index_" + StaticValue.STATE + "\" VALUES" + StaticMethod.nMark(3);
-        OJDBC ojdbc = new OJDBC();
+        String sql = "INSERT INTO inverted_index_" + StaticValue.STATE + " VALUES" + StaticMethod.nMark(3);
+        JDBC jdbc = new JDBC();
         PreparedStatement stmt = null;
         try {
-            Connection connection = ojdbc.getConnect();
+            Connection connection = jdbc.getConnect();
             stmt = connection.prepareStatement(sql);
             connection.setAutoCommit(false);
 
@@ -229,11 +257,12 @@ public class InvertedIndex {
                     e.printStackTrace();
                 }
             }
-            ojdbc.close();
+            jdbc.close();
         }
     }
 
     public static void Run() {
+        System.out.println("start...");
         InvertedIndex invertedIndex = new InvertedIndex();
         int depth = invertedIndex.getMbrDepth();
         for (int i = depth; i >= 0; i --){
@@ -249,49 +278,74 @@ public class InvertedIndex {
                     invMap.put(mbrId,invJson.toString());
 
                     // 保存数据
-                    if (invMap.size() % 2000 == 0){
+                    if (invMap.size() % 500 == 0){
                         index ++;
                         invertedIndex.saveInvertedIndex2Oracle(i,invMap);
                         invMap.clear();
-                        System.out.println("save inverted index to WYY.inverted_index_" + StaticValue.STATE + " successful:" + index * 2000);
+                        System.out.println("save inverted index to WYY.inverted_index_" + StaticValue.STATE + " depth:" + i + " successful:" + index * 500);
                     }
                 }
                 invertedIndex.saveInvertedIndex2Oracle(i,invMap);
-                System.out.println("save inverted index to WYY.inverted_index_" + StaticValue.STATE + " successful:" + index * 2000 + invMap.size());
+                System.out.println("save inverted index to WYY.inverted_index_" + StaticValue.STATE + " depth:" + i + " successful");
                 invMap.clear();
             } else {
+                Map<Integer,String> invMap = new HashMap<Integer, String>();
+                int index = 0;
                 for (int mbrId:mbrIdList){
                     // 查找mbr_id的所有子节点id
                     List<Integer> childNodeList = new ArrayList<Integer>();
                     childNodeList = invertedIndex.getMbrIdByFatherNodeId(mbrId);
                     // 遍历所有子节点及其倒排索引
-                    Map<Integer,String> invMap = new HashMap<Integer, String>();
+                    Map<Integer,String> childMap = new HashMap<Integer, String>();
                     for (int id:childNodeList){
-                        invMap.put(id,invertedIndex.getInvertedIndexByMbrId(id));
+                        childMap.put(id,invertedIndex.getInvertedIndexByMbrId(id));
                     }
                     // 生成父节点倒排索引
-
+                    Map<String,List<String>> fatherInvMap = invertedIndex.mergeMap(childMap);
+                    // 保存为json格式
+                    JSONObject jsonObject = invertedIndex.map2Json(fatherInvMap);
+                    invMap.put(mbrId,jsonObject.toString());
+                    // 保存数据
+                    if (invMap.size() % 500 == 0){
+                        index ++;
+                        invertedIndex.saveInvertedIndex2Oracle(i,invMap);
+                        invMap.clear();
+                        System.out.println("save inverted index to WYY.inverted_index_" + StaticValue.STATE + " depth:" + i + " successful:" + index * 500);
+                    }
                 }
-
+                invertedIndex.saveInvertedIndex2Oracle(i,invMap);
+                System.out.println("save inverted index to WYY.inverted_index_" + StaticValue.STATE + " depth:" + i + " successful:" + index * 500 + " last:" + invMap.size());
+                invMap.clear();
             }
         }
     }
 
     public static void main(String[] args) {
-//        Long start = System.currentTimeMillis();
-//        Run();
-//        Long end = System.currentTimeMillis();
-//        System.out.println("Time:" + (end - start)/1000f/60f + "min");
+        Long start = System.currentTimeMillis();
+        Run();
+        Long end = System.currentTimeMillis();
+        System.out.println("end...");
+        System.out.println("Time:" + (end - start)/1000f/60f + "min");
 
-        InvertedIndex invertedIndex = new InvertedIndex();
-//        System.out.println(invertedIndex.map2Json(invertedIndex.getKeywordByBusinessId(10726)));
+//        InvertedIndex invertedIndex = new InvertedIndex();
+//        System.out.println(invertedIndex.map2Json(invertedIndex.getKeywordByBusinessId(10724)));
 //        Map<Integer,String> map = new HashMap<Integer, String>();
-//        map.put(10726,invertedIndex.map2Json(invertedIndex.getKeywordByBusinessId(10726)).toString());
+//        map.put(10724,invertedIndex.map2Json(invertedIndex.getKeywordByBusinessId(10724)).toString());
 //        invertedIndex.saveInvertedIndex2Oracle(7,map);
-//        System.out.println(invertedIndex.getMbrIdByFatherNodeId(10716));
+
+//        System.out.println(invertedIndex.getMbrIdByFatherNodeId(10722));
 //        System.out.println(invertedIndex.getInvertedIndexByMbrId(121));
 
-        String json = "{\"tea\":[\"fHHQ9s6wWPkTMyNVq-0SHQ\"],\"bakeries\":[\"fHHQ9s6wWPkTMyNVq-0SHQ\"],\"smoothies\":[\"ZtEdhtbmBEoZN--g2h2mxA\"],\"coffee\":[\"fHHQ9s6wWPkTMyNVq-0SHQ\"],\"coffee roasteries\":[\"fHHQ9s6wWPkTMyNVq-0SHQ\"],\"restaurants\":[\"ZtEdhtbmBEoZN--g2h2mxA\"],\"sandwiches\":[\"ZtEdhtbmBEoZN--g2h2mxA\"],\"food\":[\"fHHQ9s6wWPkTMyNVq-0SHQ\",\"ZtEdhtbmBEoZN--g2h2mxA\"],\"juice bars\":[\"ZtEdhtbmBEoZN--g2h2mxA\"]}";
-        System.out.println(invertedIndex.json2Map(json));
+//        List<Integer> childNodeList = invertedIndex.getMbrIdByFatherNodeId(10722);
+//        Map<Integer,String> childMap = new HashMap<Integer, String>();
+//        for (int id:childNodeList){
+//            childMap.put(id,invertedIndex.getInvertedIndexByMbrId(id));
+//        }
+//        Map<String,List<String>> fatherInvMap = invertedIndex.mergeMap(childMap);
+//        JSONObject jsonObject = invertedIndex.map2Json(fatherInvMap);
+//        System.out.println(jsonObject.toString());
+
+//        String json = "{\"tea\":[\"fHHQ9s6wWPkTMyNVq-0SHQ\"],\"bakeries\":[\"fHHQ9s6wWPkTMyNVq-0SHQ\"],\"smoothies\":[\"ZtEdhtbmBEoZN--g2h2mxA\"],\"coffee\":[\"fHHQ9s6wWPkTMyNVq-0SHQ\"],\"coffee roasteries\":[\"fHHQ9s6wWPkTMyNVq-0SHQ\"],\"restaurants\":[\"ZtEdhtbmBEoZN--g2h2mxA\"],\"sandwiches\":[\"ZtEdhtbmBEoZN--g2h2mxA\"],\"food\":[\"fHHQ9s6wWPkTMyNVq-0SHQ\",\"ZtEdhtbmBEoZN--g2h2mxA\"],\"juice bars\":[\"ZtEdhtbmBEoZN--g2h2mxA\"]}";
+//        System.out.println(invertedIndex.json2Map(json));
     }
 }
